@@ -1,7 +1,7 @@
 import joblib
 import pandas as pd
 
-from feature_extraction import extract_url_features
+from ml_model.feature_extraction import extract_url_features
 
 
 # Load the trained model
