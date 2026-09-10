@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "AI Phishing Detection & Browser Protection",
+  "version": "1.0.0",
+  "description": "Detects potentially phishing URLs using machine learning.",
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "AI Phishing Detection"
+  }
+}
