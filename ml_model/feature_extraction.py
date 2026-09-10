@@ -4,17 +4,51 @@ from urllib.parse import urlparse
 def extract_url_features(url):
     parsed_url = urlparse(url)
 
+    domain = parsed_url.netloc
+
+    # Remove username/password if present
+    if "@" in domain:
+        domain = domain.split("@")[-1]
+
+    # Remove port number
+    domain_without_port = domain.split(":")[0]
+
+    # Check whether the domain is an IP address
+    is_domain_ip = 1 if all(
+        part.isdigit()
+        for part in domain_without_port.split(".")
+        if part
+    ) and "." in domain_without_port else 0
+
+    # Count subdomains
+    domain_parts = domain_without_port.split(".")
+    num_subdomains = max(len(domain_parts) - 2, 0)
+
+    # URL statistics
+    num_letters = sum(char.isalpha() for char in url)
+    num_digits = sum(char.isdigit() for char in url)
+
+    # Simple obfuscation detection
+    suspicious_chars = ["%", "@", "\\", ".."]
+    has_obfuscation = 1 if any(
+        char in url for char in suspicious_chars
+    ) else 0
+
+    num_obfuscated_chars = url.count("%")
+
     features = {
         "url_length": len(url),
-        "num_dots": url.count("."),
-        "num_hyphens": url.count("-"),
-        "num_slashes": url.count("/"),
-        "num_question_marks": url.count("?"),
+        "domain_length": len(domain_without_port),
+        "is_domain_ip": is_domain_ip,
+        "num_subdomains": num_subdomains,
+        "has_obfuscation": has_obfuscation,
+        "num_obfuscated_chars": num_obfuscated_chars,
+        "num_letters": num_letters,
+        "num_digits": num_digits,
         "num_equals": url.count("="),
-        "num_at": url.count("@"),
+        "num_question_marks": url.count("?"),
         "num_ampersands": url.count("&"),
-        "has_https": 1 if parsed_url.scheme == "https" else 0,
-        "has_ip": 1 if any(char.isdigit() for char in parsed_url.netloc) else 0
+        "has_https": 1 if parsed_url.scheme.lower() == "https" else 0
     }
 
     return features

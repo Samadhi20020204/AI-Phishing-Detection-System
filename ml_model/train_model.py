@@ -11,44 +11,65 @@ from sklearn.metrics import (
     confusion_matrix
 )
 
+from feature_extraction import extract_url_features
+
 
 # ==========================================
 # 1. Load Dataset
 # ==========================================
 
+print("Loading dataset...")
+
 df = pd.read_csv("dataset/PhiUSIIL_Phishing_URL_Dataset.csv")
 
+print("Dataset loaded successfully!")
+print("Number of URLs:", len(df))
+
 
 # ==========================================
-# 2. Select Features
+# 2. Extract Features From URLs
 # ==========================================
 
-features = [
-    "URLLength",
-    "DomainLength",
-    "IsDomainIP",
-    "NoOfSubDomain",
-    "HasObfuscation",
-    "NoOfObfuscatedChar",
-    "NoOfLettersInURL",
-    "NoOfDegitsInURL",
-    "NoOfEqualsInURL",
-    "NoOfQMarkInURL",
-    "NoOfAmpersandInURL",
-    "IsHTTPS"
-]
+print("\nExtracting URL features...")
+
+feature_data = []
+
+for url in df["URL"]:
+    extracted = extract_url_features(url)
+
+    feature_data.append({
+        "url_length": extracted["url_length"],
+        "domain_length": extracted["domain_length"],
+        "is_domain_ip": extracted["is_domain_ip"],
+        "num_subdomains": extracted["num_subdomains"],
+        "has_obfuscation": extracted["has_obfuscation"],
+        "num_obfuscated_chars": extracted["num_obfuscated_chars"],
+        "num_letters": extracted["num_letters"],
+        "num_digits": extracted["num_digits"],
+        "num_equals": extracted["num_equals"],
+        "num_question_marks": extracted["num_question_marks"],
+        "num_ampersands": extracted["num_ampersands"],
+        "has_https": extracted["has_https"]
+    })
 
 
-# Input features
-X = df[features]
+X = pd.DataFrame(feature_data)
 
-# Target label
+print("Feature extraction completed!")
+
+
+# ==========================================
+# 3. Target Label
+# ==========================================
+
 y = df["label"]
 
 
 # ==========================================
-# 3. Split Dataset
+# 4. Split Dataset
 # ==========================================
+
+print("\nSplitting dataset...")
 
 X_train, X_test, y_train, y_test = train_test_split(
     X,
@@ -60,7 +81,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # ==========================================
-# 4. Create Random Forest Model
+# 5. Create Random Forest Model
 # ==========================================
 
 model = RandomForestClassifier(
@@ -71,10 +92,10 @@ model = RandomForestClassifier(
 
 
 # ==========================================
-# 5. Train Model
+# 6. Train Model
 # ==========================================
 
-print("Training Random Forest model...")
+print("\nTraining Random Forest model...")
 
 model.fit(X_train, y_train)
 
@@ -82,14 +103,14 @@ print("Model training completed!")
 
 
 # ==========================================
-# 6. Make Predictions
+# 7. Make Predictions
 # ==========================================
 
 y_pred = model.predict(X_test)
 
 
 # ==========================================
-# 7. Calculate Evaluation Metrics
+# 8. Calculate Evaluation Metrics
 # ==========================================
 
 accuracy = accuracy_score(y_test, y_pred)
@@ -99,7 +120,7 @@ f1 = f1_score(y_test, y_pred)
 
 
 # ==========================================
-# 8. Display Evaluation Results
+# 9. Display Evaluation Results
 # ==========================================
 
 print("\nModel Evaluation:")
@@ -111,7 +132,7 @@ print("F1 Score :", round(f1, 4))
 
 
 # ==========================================
-# 9. Confusion Matrix
+# 10. Confusion Matrix
 # ==========================================
 
 cm = confusion_matrix(y_test, y_pred)
@@ -122,7 +143,7 @@ print(cm)
 
 
 # ==========================================
-# 10. Save Trained Model
+# 11. Save Trained Model
 # ==========================================
 
 model_path = "ml_model/phishing_model.pkl"
