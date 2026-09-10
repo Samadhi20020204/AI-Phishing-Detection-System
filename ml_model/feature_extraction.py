@@ -2,6 +2,11 @@ from urllib.parse import urlparse
 
 
 def extract_url_features(url):
+
+        # Normalize URL by removing trailing slash
+    if url.endswith("/") and not url.endswith("://"):
+        url = url.rstrip("/")
+        
     parsed_url = urlparse(url)
 
     domain = parsed_url.netloc
