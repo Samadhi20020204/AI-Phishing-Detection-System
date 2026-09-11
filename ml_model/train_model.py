@@ -38,19 +38,30 @@ for url in df["URL"]:
     extracted = extract_url_features(url)
 
     feature_data.append({
-        "url_length": extracted["url_length"],
-        "domain_length": extracted["domain_length"],
-        "is_domain_ip": extracted["is_domain_ip"],
-        "num_subdomains": extracted["num_subdomains"],
-        "has_obfuscation": extracted["has_obfuscation"],
-        "num_obfuscated_chars": extracted["num_obfuscated_chars"],
-        "num_letters": extracted["num_letters"],
-        "num_digits": extracted["num_digits"],
-        "num_equals": extracted["num_equals"],
-        "num_question_marks": extracted["num_question_marks"],
-        "num_ampersands": extracted["num_ampersands"],
-        "has_https": extracted["has_https"]
-    })
+    "url_length": extracted["url_length"],
+    "domain_length": extracted["domain_length"],
+    "is_domain_ip": extracted["is_domain_ip"],
+    "num_subdomains": extracted["num_subdomains"],
+    "has_obfuscation": extracted["has_obfuscation"],
+    "num_obfuscated_chars": extracted["num_obfuscated_chars"],
+    "num_letters": extracted["num_letters"],
+    "num_digits": extracted["num_digits"],
+    "num_equals": extracted["num_equals"],
+    "num_question_marks": extracted["num_question_marks"],
+    "num_ampersands": extracted["num_ampersands"],
+    "has_https": extracted["has_https"],
+
+    "num_dots": extracted["num_dots"],
+    "num_hyphens": extracted["num_hyphens"],
+    "num_slashes": extracted["num_slashes"],
+    "num_at_symbols": extracted["num_at_symbols"],
+    "num_colons": extracted["num_colons"],
+    "num_semicolons": extracted["num_semicolons"],
+    "path_length": extracted["path_length"],
+    "query_length": extracted["query_length"],
+    "has_suspicious_word": extracted["has_suspicious_word"],
+    "num_suspicious_words": extracted["num_suspicious_words"]
+})
 
 
 X = pd.DataFrame(feature_data)
